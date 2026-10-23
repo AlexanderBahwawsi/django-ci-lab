@@ -34,3 +34,6 @@ class DogAPITestCase(TestCase):
         response = self.client.delete(f'/dogs/{dog.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Dog.objects.count(), 0)
+
+    def test_intentional_failure(self):
+        self.assertEqual(1, 0, "This is an intentional failure to demonstrate CI")
