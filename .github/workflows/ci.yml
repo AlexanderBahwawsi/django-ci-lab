@@ -1,0 +1,31 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Show Docker version
+        run: docker --version && docker compose version
+
+      - name: Build and start services
+        run: docker compose up -d --build
+
+      - name: Run migrations
+        run: docker compose exec -T web python manage.py migrate
+
+      - name: Run tests
+        run: docker compose exec -T web python manage.py test
+
+      - name: Shut down services
+        if: always()
+        run: docker compose down
